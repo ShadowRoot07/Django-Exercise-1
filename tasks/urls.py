@@ -10,5 +10,7 @@ urlpatterns = [
     path('api/tareas/<int:id>/', views.detalle_tarea, name='detalle_tarea'),
     path('api/tareas/editar/<int:id>/', views.editar_tarea, name='editar_tarea'),
     path('api/tareas/eliminar/<int:id>/', views.eliminar_tarea, name='eliminar_tarea'),
+    path('login/', views.iniciar_sesion, name='login'),
+path('logout/', views.cerrar_sesion, name='logout'),
 ]
 

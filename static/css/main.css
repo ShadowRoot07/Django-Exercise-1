@@ -75,3 +75,10 @@ button:hover {
     color: #000;
 }
 
+.alert-success {
+    border: 1px solid #39ff14;
+    color: #39ff14;
+    background: rgba(57, 255, 20, 0.1);
+    padding: 10px;
+    margin-bottom: 20px;
+}

@@ -1,12 +1,28 @@
 from django.shortcuts import render, redirect, get_object_or_404
+
 from django.http import HttpResponse, JsonResponse
+
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import AuthenticationForm
+
+from django.views.decorators.http import require_POST, require_http_methods
+from django.contrib.auth.decorators import login_required, user_passes_test
+
+from django.contrib import messages
+
 from .models import Tarea
 from .forms import TareaForm
+
 
 # Añadimos 'nombre' como parámetro
 def hola_mundo(request, nombre):
     # Usamos una f-string para insertar el nombre en el HTML
     return HttpResponse(f"<h1>¡Hola {nombre}!</h1><p>Bienvenido al calabozo de Django.</p>")
+
+
+@user_passes_test(lambda u: u.is_staff)
+def vista_secreta_admin(request):
+    return HttpResponse("Bienvenido al panel de control, ShadowRoot07")
 
 
 def lista_tareas(request):
@@ -43,6 +59,7 @@ def detalle_tarea(request, id):
     })
 
 
+@login_required
 def crear_tarea(request):
     # Eliminamos el get_object_or_404 porque estamos CREANDO, no editando.
     
@@ -50,35 +67,14 @@ def crear_tarea(request):
         form = TareaForm(request.POST)
         if form.is_valid():
             form.save()
+            
+            messages.success(request, '¡Felicidades ShadowRoot07! La tarea fue creada con éxito.')
+
             return redirect('tasks:lista_tareas') 
     else:
         form = TareaForm()
 
     return render(request, 'tasks/crear.html', {'mi_formulario': form})
-
-
-def editar_tarea(request, id):
-    tarea = get_object_or_404(Tarea, id=id)
-    if request.method == 'POST':
-        # 'instance=tarea' es el secreto: le dice a Django que no cree una nueva, 
-        # sino que actualice la que ya encontramos.
-        form = TareaForm(request.POST, instance=tarea)
-        if form.is_valid():
-            form.save()
-            return redirect('tasks:lista_tareas')
-    else:
-        # Aquí cargamos el formulario con los datos actuales de la tarea
-        form = TareaForm(instance=tarea)
-        
-    return render(request, 'tasks/crear.html', {'mi_formulario': form, 'editando': True})
-
-
-def eliminar_tarea(request, id):
-    tarea = get_object_or_404(Tarea, id=id)
-    if request.method == 'POST':
-        tarea.delete()
-        return redirect('tasks:lista_tareas')
-    return render(request, 'tasks/confirmar_eliminacion.html', {'tarea': tarea})
 
 
 def editar_tarea(request, id):
@@ -96,12 +92,30 @@ def editar_tarea(request, id):
     # Reutilizamos crear.html, pero pasamos una variable 'editando'
     return render(request, 'tasks/crear.html', {'mi_formulario': form, 'editando': True})
 
-
+@require_POST
 def eliminar_tarea(request, id):
     tarea = get_object_or_404(Tarea, id=id)
-    if request.method == 'POST':
-        tarea.delete()
-        return redirect('tasks:lista_tareas')
+    tarea.delete()
+    return redirect('tasks:lista_tareas')
     
     return render(request, 'tasks/confirmar_eliminacion.html', {'tarea': tarea})
 
+
+def iniciar_sesion(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            nombre_usuario = form.cleaned_data.get('username')
+            contrasenia = form.cleaned_data.get('password')
+            usuario = authenticate(username=nombre_usuario, password=contrasenia)
+            if usuario is not None:
+                login(request, usuario)
+                return redirect('tasks:lista_tareas')
+    else:
+        form = AuthenticationForm()
+    
+    return render(request, 'tasks/login.html', {'mi_formulario': form})
+
+def cerrar_sesion(request):
+    logout(request)
+    return redirect('tasks:lista_tareas')

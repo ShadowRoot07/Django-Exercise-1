@@ -1,0 +1,10 @@
+{% extends "tasks/base.html" %}
+{% block content %}
+    <h1>Acceso al Sistema</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ mi_formulario.as_p }}
+        <button type="submit" class="btn-submit">Entrar 🔓</button>
+    </form>
+{% endblock %}
+
