@@ -1,0 +1,36 @@
+{% extends "tasks/base.html" %}
+
+{% block title %}Lista de Mis Tareas{% endblock %}
+
+{% block content %}
+    <h1>Mis Tareas Pendientes</h1>
+
+    <ul>
+        {% for tarea in mis_tareas %}
+            <li>
+                {% if tarea.completada %}
+                    <span class="completada">
+                        <a href="{% url 'tasks:detalle_tarea' tarea.id %}">
+                            {{ tarea.titulo }}
+                        </a>
+                    </span> ✅
+                {% else %}
+                    <span class="pendiente">
+                        <a href="{% url 'tasks:detalle_tarea' tarea.id %}">
+                            {{ tarea.titulo }}
+                        </a>
+                    </span> ⏳
+                {% endif %}
+                
+                <small>(ID: {{ tarea.id }})</small>
+                <a href="{% url 'tasks:editar_tarea' tarea.id %}">✏️</a>
+                <a href="{% url 'tasks:eliminar_tarea' tarea.id %}" style="color: red;">🗑️</a>
+            </li>
+        {% empty %}
+            <p>No hay tareas registradas. ¡Hora de descansar!</p>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'tasks:crear_tarea' %}">Nueva Tarea</a>
+
+{% endblock %}
+

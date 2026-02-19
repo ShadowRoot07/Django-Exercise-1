@@ -1,0 +1,36 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.env
+.venv
+pip-log.txt
+pip-delete-this-directory.txt
+
+# --- Django ---
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media/
+# Si decides usar variables de entorno para FastAPI/Django
+.env
+
+# --- Base de Datos (Seguridad) ---
+*.sql
+*.dump
+
+# --- Sistema/Termux ---
+.DS_Store
+.thumbnails/
+.bash_history
+*.swp
+*~
+
+# --- Estáticos Recopilados ---
+static_root/
+staticfiles/
+

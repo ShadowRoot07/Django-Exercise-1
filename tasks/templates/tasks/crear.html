@@ -1,0 +1,21 @@
+{% extends "tasks/base.html" %}
+
+{% block title %}Crear Nueva Tarea{% endblock %}
+
+{% block content %}
+    <h1>{% if editando %}Editar Tarea{% else %}Añadir Tarea{% endif %}</h1>
+
+    <form method="POST">
+        {% csrf_token %} <div class="formulario-estilo">
+            {{ mi_formulario.as_p }} </div>
+
+        <button type="submit" style="background-color: green; color: white; padding: 10px;">
+            Guardar Tarea 💾
+        </button>
+        
+        <a href="/api/tareas/">Cancelar</a>
+        <small>(ID: {{ tarea.id }})</small>
+    </form>
+
+{% endblock %}
+

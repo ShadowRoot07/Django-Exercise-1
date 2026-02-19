@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Mi App de Tareas{% endblock %}</title>
+    
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+    {% block extra_head %}
+    {% endblock %}
+</head>
+<body>
+    <div class="container">
+        <nav style="display: flex; align-items: center; gap: 15px;">
+            <img src="{% static 'img/logo.png' %}" alt="Logo" style="width: 50px; height: auto;">
+            <strong>ShadowRoot07 Code</strong>
+            <a href="{% url 'tasks:lista_tareas' %}">Inicio</a>
+        </nav>
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>
+
