@@ -114,9 +114,3 @@ def iniciar_sesion(request):
 def cerrar_sesion(request):
     logout(request)
     return redirect('tasks:lista_tareas')
-
-
-@receiver(post_save, sender=User)
-def crear_perfil(sender, instance, created, **kwargs):
-    if created:
-        print(f"¡Bienvenido al sistema, {instance.username}!")
