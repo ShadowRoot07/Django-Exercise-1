@@ -10,6 +10,11 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 
 from django.contrib import messages
 
+from django.views.generic import ListView
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.contrib.auth.models import User
+
 from .models import Tarea
 from .forms import TareaForm
 
@@ -25,21 +30,10 @@ def vista_secreta_admin(request):
     return HttpResponse("Bienvenido al panel de control, ShadowRoot07")
 
 
-def lista_tareas(request):
-    tareas = Tarea.objects.all()
-    
-    # Convertimos el QuerySet a una lista de diccionarios
-    data = []
-    for t in tareas:
-        data.append({
-            'id': t.id,
-            'titulo': t.titulo,
-            'completada': t.completada,
-            'categoria': t.categoria.nombre if t.categoria else None
-        })
-
-    return render(request, 'tasks/lista.html', {'mis_tareas': tareas})
-        
+class TareaListView(ListView):
+    model = Tarea
+    template_name = 'tasks/lista.html' # Tu archivo HTML
+    context_object_name = 'mis_tareas' # El nombre que usas en el for del HTML
 
 
 def detalle_tarea(request, id):
@@ -98,8 +92,6 @@ def eliminar_tarea(request, id):
     tarea.delete()
     return redirect('tasks:lista_tareas')
     
-    return render(request, 'tasks/confirmar_eliminacion.html', {'tarea': tarea})
-
 
 def iniciar_sesion(request):
     if request.method == 'POST':
@@ -119,3 +111,9 @@ def iniciar_sesion(request):
 def cerrar_sesion(request):
     logout(request)
     return redirect('tasks:lista_tareas')
+
+
+@receiver(post_save, sender=User)
+def crear_perfil(sender, instance, created, **kwargs):
+    if created:
+        print(f"¡Bienvenido al sistema, {instance.username}!")

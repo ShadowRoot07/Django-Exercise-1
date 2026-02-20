@@ -5,7 +5,7 @@ from . import views
 app_name = 'tasks'
 
 urlpatterns = [
-    path('api/tareas/', views.lista_tareas, name='lista_tareas'),
+    path('', views.TareaListView.as_view(), name='lista_tareas'),
     path('api/tareas/crear/', views.crear_tarea, name='crear_tarea'),
     path('api/tareas/<int:id>/', views.detalle_tarea, name='detalle_tarea'),
     path('api/tareas/editar/<int:id>/', views.editar_tarea, name='editar_tarea'),

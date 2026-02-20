@@ -16,9 +16,15 @@
                     </span> ✅
                 {% else %}
                     <span class="pendiente">
-                        <a href="{% url 'tasks:detalle_tarea' tarea.id %}">
-                            {{ tarea.titulo }}
-                        </a>
+                        <li>
+                            <strong>{{ tarea.titulo }}</strong> 
+                                {% if tarea.categoria %}
+                                    <small style="color: #00f3ff;">[{{ tarea.categoria.nombre }}]</small>
+                                {% endif %}
+    
+                                <small>| Prioridad: {{ tarea.get_prioridad_display }}</small>
+                        </li>
+
                     </span> ⏳
                 {% endif %}
                 
