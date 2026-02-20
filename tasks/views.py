@@ -34,6 +34,9 @@ class TareaListView(ListView):
     model = Tarea
     template_name = 'tasks/lista.html' # Tu archivo HTML
     context_object_name = 'mis_tareas' # El nombre que usas en el for del HTML
+    def get_queryset(self):
+        # Solo mostrar tareas del usuario logueado, por ejemplo
+        return Tarea.objects.filter(usuario=self.request.user)
 
 
 def detalle_tarea(request, id):
